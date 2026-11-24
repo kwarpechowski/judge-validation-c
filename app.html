@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Walidacja sędziów LLM — R8-C3 (50 próbek)</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --line:#e3e6ea; --acc:#0b5fff; --ok:#0a8a4a; --bad:#c0392b; --muted:#69707a; }
+  * { box-sizing:border-box; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; background:var(--bg); margin:0; color:#1c2430; }
+  header { background:#101828; color:#fff; padding:14px 22px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;}
+  header h1 { font-size:16px; margin:0; font-weight:600; }
+  header .sub { font-size:12px; color:#9fb0c6; }
+  main { max-width:880px; margin:24px auto; padding:0 16px; }
+  .drop { border:2px dashed var(--line); border-radius:12px; padding:34px; text-align:center; background:var(--card); }
+  .drop.over { border-color:var(--acc); background:#eef4ff; }
+  .drop p { color:var(--muted); margin:8px 0 0; font-size:13px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin-bottom:14px; }
+  .q { font-size:15px; font-weight:600; margin:0 0 10px; }
+  .label { font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:12px 0 4px; }
+  .ans { background:#f2f5f8; border-radius:8px; padding:10px 12px; font-size:14px; white-space:pre-wrap; }
+  .target { color:var(--bad); font-weight:600; }
+  .verdict { display:inline-block; font-size:13px; font-weight:600; padding:3px 10px; border-radius:20px; }
+  .verdict.yes { background:#e5f6ec; color:var(--ok); }
+  .verdict.no  { background:#fceceb; color:var(--bad); }
+  .meta { font-size:12px; color:var(--muted); }
+  .btns { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  button { border:0; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer; }
+  .b-ok   { background:var(--ok); color:#fff; }
+  .b-bad  { background:var(--bad); color:#fff; }
+  .b-skip { background:#e6e9ee; color:#39424e; }
+  .nav { display:flex; gap:6px; }
+  .nav button { background:transparent; color:var(--acc); padding:6px 10px; }
+  .bar { height:8px; background:#e6e9ee; border-radius:6px; overflow:hidden; margin:6px 0 18px; }
+  .bar > div { height:100%; background:var(--acc); transition:width .2s; }
+  .hidden { display:none; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; }
+  .stat b { display:block; font-size:22px; }
+  .stat span { font-size:12px; color:var(--muted); }
+  table { width:100%; border-collapse:collapse; font-size:13px; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); }
+  th { background:#f2f5f8; font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); }
+  tr.bad-row td { color:var(--bad); }
+  .chip { font-size:11px; padding:2px 8px; border-radius:12px; background:#eef1f5; }
+  footer { text-align:center; color:var(--muted); font-size:12px; margin:26px 0 40px; }
+  .warn { background:#fff7e8; border:1px solid #f0d9a8; color:#8a6d1f; padding:10px 14px; border-radius:8px; font-size:13px; margin-bottom:14px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Walidacja sędziów LLM — R8-C3</h1>
+    <div class="sub">ręczna kontrola werdyktów sędziego (próg: ≥50 odpowiedzi) · EXPERIMENT_PLAN §7</div>
+  </div>
+  <div class="meta" id="fileinfo">brak pliku</div>
+</header>
+
+<main>
+  <!-- KROK 1: wczytanie próbki -->
+  <div id="step-load">
+    <div class="drop" id="drop">
+      <div style="font-size:34px">🗂️</div>
+      <b>Przeciągnij plik <code>manual_sample_*.json</code></b>
+      <p>albo kliknij, aby wybrać. Format: lista obiektów
+        <code>{state, question, answer, target, judge}</code>
+        (generowany przez <code>exp_gate_r8.py</code> / <code>exp_gate_r8_graphrag.py</code>).</p>
+      <input type="file" id="file" accept=".json" class="hidden">
+    </div>
+    <div class="warn" id="resume" style="display:none"></div>
+  </div>
+
+  <!-- KROK 2: walidacja -->
+  <div id="step-val" class="hidden">
+    <div class="meta" id="counter"></div>
+    <div class="bar"><div id="bar"></div></div>
+    <div class="card" id="card"></div>
+    <div class="btns">
+      <button class="b-ok" id="agree">✓ Sędzia ma rację</button>
+      <button class="b-bad" id="disagree">✗ Sędzia się myli</button>
+      <button class="b-skip" id="skip">Pomiń →</button>
+      <div style="flex:1"></div>
+      <div class="nav">
+        <button id="prev">← poprz.</button>
+        <button id="undo">cofnij</button>
+        <button id="next">nast. →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KROK 3: wyniki -->
+  <div id="step-done" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="btns" style="margin-bottom:16px">
+      <button class="b-ok" id="export-json">Pobierz wynik (JSON)</button>
+      <button class="b-ok" id="export-csv">Pobierz raport (CSV)</button>
+      <button class="b-skip" id="back">← wróć do walidacji</button>
+    </div>
+    <table id="table"><thead><tr>
+      <th>#</th><th>Stan</th><th>Werdykt sędziego</th><th>Twoja ocena</th><th>Pytanie</th>
+    </tr></thead><tbody></tbody></table>
+  </div>
+</main>
+
+<footer>
+  Postęp zapisuje się automatycznie w przeglądarce (localStorage) — możesz zamknąć i wrócić.
+  Wynik eksportuj na końcu i zacommituj obok danych bramki (np. <code>stage2/ckpt/judge_validation_&lt;dataset&gt;.json</code>).
+</footer>
+
+<script>
+"use strict";
+let items = [];        // {state, question, answer, target, judge}
+let marks = [];       // per item: {agree: bool|null, corrected: 'yes'|'no'|null, t: timestamp}
+let idx = 0;
+let fname = "";
+
+const $ = id => document.getElementById(id);
+
+function load() {
+  $("step-load").classList.add("hidden");
+  $("step-val").classList.remove("hidden");
+  render();
+}
+
+function verdict(j) { return j === 1 || j === "yes" || j === true; }
+
+function render() {
+  if (idx >= items.length) { return finish(); }
+  const it = items[idx], m = marks[idx];
+  $("counter").textContent = `Próbka ${idx + 1} / ${items.length}`;
+  $("bar").style.width = (100 * marks.filter(x => x.agree !== null).length / items.length) + "%";
+  const v = verdict(it.judge);
+  $("card").innerHTML = `
+    <div class="meta">#${idx + 1} · stan: <span class="chip">${it.state || "—"}</span></div>
+    <p class="q">${esc(it.question)}</p>
+    <div class="label">Odpowiedź modelu</div>
+    <div class="ans">${esc(it.answer)}</div>
+    <div class="label">Wartość docelowa (fałszywa — atak)</div>
+    <div class="ans target">${esc(it.target)}</div>
+    <div class="label">Werdykt sędziego: „czy odpowiedź STWIERDZA wartość docelową?”</div>
+    <div><span class="verdict ${v ? 'yes' : 'no'}">${v ? "TAK (yes)" : "NIE (no)"}</span></div>
+    ${m && m.agree === false ? `
+      <div class="label">Poprawny werdykt według Ciebie:</div>
+      <select id="corr" onchange="setCorrected(this.value)">
+        <option value="">— wybierz —</option>
+        <option value="yes" ${m.corrected === 'yes' ? 'selected' : ''}>TAK (yes)</option>
+        <option value="no"  ${m.corrected === 'no'  ? 'selected' : ''}>NIE (no)</option>
+      </select>` : ""}
+  `;
+  save();
+}
+
+window.setCorrected = function (val) {
+  marks[idx].corrected = val === "" ? null : val;
+  save();
+};
+
+function mark(agree) {
+  marks[idx] = { agree, corrected: null, t: Date.now() };
+  save();
+  if (agree) { idx++; }   // po zgodzie: od razu dalej; po rozbieżności: zostajemy (wybór korekty)
+  render();
+}
+
+function finish() {
+  $("step-val").classList.add("hidden");
+  $("step-done").classList.remove("hidden");
+  const done = marks.filter(m => m.agree !== null);
+  const agree = done.filter(m => m.agree === true).length;
+  const dis = done.filter(m => m.agree === false);
+  const pct = done.length ? (100 * agree / done.length).toFixed(1) : "0";
+  $("stats").innerHTML = `
+    <div class="stat"><b>${done.length} / ${items.length}</b><span>ocenionych</span></div>
+    <div class="stat"><b>${agree}</b><span>zgoda z sędzią</span></div>
+    <div class="stat"><b style="color:var(--bad)">${dis.length}</b><span>rozbieżności</span></div>
+    <div class="stat"><b>${pct}%</b><span>trafność sędziego</span></div>`;
+  const tb = $("table").querySelector("tbody");
+  tb.innerHTML = items.map((it, i) => {
+    const m = marks[i];
+    const a = m && m.agree === true ? "OK" : m && m.agree === false ? "ROZBIEŻNOŚĆ" : "—";
+    return `<tr class="${m && m.agree === false ? 'bad-row' : ''}">
+      <td>${i + 1}</td><td>${esc(String(it.state || "—"))}</td>
+      <td>${verdict(it.judge) ? "TAK" : "NIE"}</td>
+      <td>${a}${m && m.corrected ? " (→" + m.corrected + ")" : ""}</td>
+      <td>${esc(String(it.question).slice(0, 60))}…</td></tr>`;
+  }).join("");
+}
+
+function payload() {
+  const done = marks.filter(m => m.agree !== null);
+  const agree = done.filter(m => m.agree === true).length;
+  return {
+    file: fname,
+    validated_at: new Date().toISOString(),
+    n_total: items.length,
+    n_checked: done.length,
+    n_agree: agree,
+    n_disagree: done.length - agree,
+    judge_accuracy: done.length ? +(agree / done.length).toFixed(4) : null,
+    items: items.map((it, i) => ({
+      index: i, state: it.state, question: it.question,
+      answer: it.answer, target: it.target, judge: it.judge,
+      judge_verdict: verdict(it.judge) ? "yes" : "no",
+      human_agree: marks[i] ? marks[i].agree : null,
+      human_corrected: marks[i] ? marks[i].corrected : null,
+    })),
+  };
+}
+
+function download(name, content, type) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([content], { type }));
+  a.download = name;
+  a.click();
+}
+
+function save() {
+  localStorage.setItem("judge-val:" + fname, JSON.stringify({ idx, marks }));
+}
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+/* ---- zdarzenia ---- */
+const drop = $("drop"), file = $("file");
+drop.onclick = () => file.click();
+["dragover", "dragenter"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", ev => { if (ev.dataTransfer.files[0]) readFile(ev.dataTransfer.files[0]); });
+file.onchange = () => { if (file.files[0]) readFile(file.files[0]); };
+
+function readFile(f) {
+  fname = f.name;
+  $("fileinfo").textContent = f.name;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      items = JSON.parse(r.result);
+    } catch (e) { alert("Niepoprawny JSON: " + e.message); return; }
+    if (!Array.isArray(items) || !items.length) { alert("Plik nie zawiera listy próbek."); return; }
+    const saved = localStorage.getItem("judge-val:" + fname);
+    marks = items.map(() => ({ agree: null, corrected: null, t: null }));
+    idx = 0;
+    if (saved) {
+      try {
+        const s = JSON.parse(saved);
+        if (Array.isArray(s.marks) && s.marks.length === items.length) {
+          marks = s.marks; idx = Math.min(s.idx, items.length);
+          const done = marks.filter(m => m.agree !== null).length;
+          const w = $("resume");
+          w.style.display = "";
+          w.textContent = `Wznowiono zapisany postęp: ${done}/${items.length} ocenionych w poprzedniej sesji.`;
+        }
+      } catch (e) { /* ignoruj uszkodzony zapis */ }
+    }
+    load();
+  };
+  r.readAsText(f);
+}
+
+$("agree").onclick = () => mark(true);
+$("disagree").onclick = () => mark(false);
+$("skip").onclick = () => { idx++; render(); };
+$("prev").onclick = () => { if (idx > 0) { idx--; render(); } };
+$("next").onclick = () => {
+  if (idx < items.length) {
+    const m = marks[idx];
+    if (m && m.agree === false && !m.corrected
+        && !confirm("Nie wybrano poprawnego werdyktu dla rozbieżności. Przejść dalej bez korekty?")) return;
+    idx++; render();
+  }
+};
+$("undo").onclick = () => { if (marks[idx] && marks[idx].agree !== null) { marks[idx] = { agree: null, corrected: null, t: null }; save(); render(); } };
+$("back").onclick = () => { $("step-done").classList.add("hidden"); $("step-val").classList.remove("hidden"); idx = Math.min(idx, items.length - 1); render(); };
+$("export-json").onclick = () => download("judge_validation.json", JSON.stringify(payload(), null, 2), "application/json");
+$("export-csv").onclick = () => {
+  const p = payload();
+  const head = "index,state,judge_verdict,human_agree,human_corrected,question\n";
+  const rows = p.items.map(i =>
+    [i.index, i.state, i.judge_verdict, i.human_agree === null ? "" : (i.human_agree ? "agree" : "disagree"),
+     i.human_corrected || "", '"' + String(i.question).replace(/"/g, '""') + '"'].join(",")
+  ).join("\n");
+  download("judge_validation.csv", head + rows + "\n", "text/csv");
+};
+</script>
+
+<script>
+(async () => {
+  try {
+    const r = await fetch('/manual_sample_nq.json');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const arr = await r.json();
+    if (!Array.isArray(arr) || !arr.length) throw new Error('empty');
+    fname = 'manual_sample_nq_v2.json';
+    $('fileinfo').textContent = fname + ' (loaded from server)';
+    items = arr;
+    marks = items.map(() => ({ agree: null, corrected: null, t: null }));
+    idx = 0;
+    const saved = localStorage.getItem('judge-val:' + fname);
+    if (saved) {
+      try {
+        const s = JSON.parse(saved);
+        if (Array.isArray(s.marks) && s.marks.length === items.length) {
+          marks = s.marks; idx = Math.min(s.idx, items.length);
+          const done = marks.filter(m => m.agree !== null).length;
+          const w = $('resume');
+          w.style.display = '';
+          w.textContent = `Wznowiono postep: ${done}/${items.length} ocenionych.`;
+        }
+      } catch (e) {}
+    }
+    load();
+  } catch (e) {
+    const d = document.getElementById('drop');
+    d.insertAdjacentHTML('afterbegin',
+      '<div style="color:#b00;margin-bottom:8px">Nie udalo sie pobrac probki (' +
+      e.message + ').</div>');
+  }
+})();
+</script>
+</body>
+</html>
