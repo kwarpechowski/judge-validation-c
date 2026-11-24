@@ -1,0 +1,1 @@
+{"name":"judge-validation","module":"index.tsx","type":"module","scripts":{"start":"bun run index.tsx"}}
