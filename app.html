@@ -284,6 +284,7 @@ $("export-csv").onclick = () => {
 </script>
 
 <script>
+// Remote boot + server autosave (paper C, R8-C3).
 (async () => {
   try {
     const r = await fetch('/manual_sample_nq.json');
@@ -291,23 +292,63 @@ $("export-csv").onclick = () => {
     const arr = await r.json();
     if (!Array.isArray(arr) || !arr.length) throw new Error('empty');
     fname = 'manual_sample_nq_v2.json';
-    $('fileinfo').textContent = fname + ' (loaded from server)';
     items = arr;
     marks = items.map(() => ({ agree: null, corrected: null, t: null }));
     idx = 0;
-    const saved = localStorage.getItem('judge-val:' + fname);
-    if (saved) {
-      try {
-        const s = JSON.parse(saved);
-        if (Array.isArray(s.marks) && s.marks.length === items.length) {
-          marks = s.marks; idx = Math.min(s.idx, items.length);
-          const done = marks.filter(m => m.agree !== null).length;
-          const w = $('resume');
-          w.style.display = '';
-          w.textContent = `Wznowiono postep: ${done}/${items.length} ocenionych.`;
-        }
-      } catch (e) {}
+
+    // candidates: localStorage vs server
+    let localC = null;
+    try {
+      const s = JSON.parse(localStorage.getItem('judge-val:' + fname) || 'null');
+      if (s && Array.isArray(s.marks) && s.marks.length === items.length) localC = s;
+    } catch (e) {}
+    let serverC = null;
+    try {
+      const sr = await fetch('/api/annotations');
+      if (sr.ok) {
+        const sv = await sr.json();
+        if (sv && sv.file === fname && Array.isArray(sv.marks) &&
+            sv.marks.length === items.length) serverC = sv;
+      }
+    } catch (e) {}
+
+    const count = m => m.filter(x => x && x.agree !== null).length;
+    let best = null, from = '';
+    if (localC && serverC) {
+      best = count(serverC.marks) >= count(localC.marks) ? serverC : localC;
+      from = best === serverC ? 'server' : 'browser';
+    } else if (serverC) { best = serverC; from = 'server'; }
+    else if (localC) { best = localC; from = 'browser'; }
+    if (best) {
+      marks = best.marks; idx = Math.min(best.idx || 0, items.length);
+      const done = count(marks);
+      const w = $('resume');
+      w.style.display = '';
+      w.textContent = `Wznowiono (${from === 'server' ? 'zapis z serwera' : 'zapis przegladarki'}): ${done}/${items.length} ocenionych.`;
     }
+
+    // autosave to the server after every change (debounced)
+    const _saveLocal = save;
+    let _t = null, _lastBody = '';
+    save = function () {
+      _saveLocal();
+      if (_t) clearTimeout(_t);
+      _t = setTimeout(() => {
+        const body = JSON.stringify({ file: fname, idx, marks, updated: new Date().toISOString() });
+        if (body === _lastBody) return;
+        _lastBody = body;
+        fetch('/api/annotations', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body,
+        }).then(() => {
+          const fi = $('fileinfo');
+          if (fi) fi.textContent = fname + ' (autosave na serwerze: ' + new Date().toLocaleTimeString() + ')';
+        }).catch(() => {});
+      }, 400);
+    };
+
+    $('fileinfo').textContent = fname + ' (loaded from server, autosave on)';
     load();
   } catch (e) {
     const d = document.getElementById('drop');
