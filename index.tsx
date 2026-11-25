@@ -27,8 +27,7 @@ const server = Bun.serve({
         }
         parsed.received_at = new Date().toISOString();
         parsed.source = req.headers.get("x-forwarded-for") ?? "unknown";
-        await Bun.write(SAVE_PATH + ".tmp", JSON.stringify(parsed));
-        await Bun.rename(SAVE_PATH + ".tmp", SAVE_PATH);
+        await Bun.write(SAVE_PATH, JSON.stringify(parsed, null, 1));
         return new Response(JSON.stringify({ ok: true, received_at: parsed.received_at }), {
           headers: { "content-type": "application/json" } });
       } catch (e) {
