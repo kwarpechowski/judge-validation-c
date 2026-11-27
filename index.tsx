@@ -1,15 +1,20 @@
 // Remote judge-validation app for paper C (R8-C3 manual validation).
 // Artifacts fetched from the public GitHub repo; annotations autosaved to /data.
 const RAW = "https://raw.githubusercontent.com/kwarpechowski/judge-validation-c/master/";
-const [HTML, SAMPLE] = await Promise.all([
+const [HTML, SAMPLE, SAMPLE_HP] = await Promise.all([
   fetch(RAW + "app.html").then(r => r.text()),
   fetch(RAW + "manual_sample_nq.json").then(r => r.text()),
+  fetch(RAW + "manual_sample_hotpotqa.json").then(r => r.text()),
 ]);
 
-const SAVE_PATH = "/data/annotations_nq.json";
 
-async function readAnnotations() {
-  try { return await Bun.file(SAVE_PATH).text(); }
+
+function savePath(url) {
+  const ds = new URL(url).searchParams.get("sample") === "hotpotqa" ? "hotpotqa" : "nq";
+  return "/data/annotations_" + ds + ".json";
+}
+async function readAnnotations(path) {
+  try { return await Bun.file(path).text(); }
   catch { return "{}"; }
 }
 
@@ -19,6 +24,7 @@ const server = Bun.serve({
     const url = new URL(req.url);
     if (url.pathname === "/health") return new Response("ok");
     if (url.pathname === "/api/annotations" && req.method === "POST") {
+      const SAVE_PATH = savePath(req.url);
       const body = await req.text();
       try {
         const parsed = JSON.parse(body);
@@ -35,12 +41,14 @@ const server = Bun.serve({
       }
     }
     if (url.pathname === "/api/annotations" && req.method === "GET") {
-      return new Response(await readAnnotations(), {
+      return new Response(await readAnnotations(savePath(req.url)), {
         headers: { "content-type": "application/json; charset=utf-8",
                    "cache-control": "no-store" } });
     }
     if (url.pathname === "/manual_sample_nq.json")
       return new Response(SAMPLE, { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
+    if (url.pathname === "/manual_sample_hotpotqa.json")
+      return new Response(SAMPLE_HP, { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
     return new Response(HTML, { headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" } });
   },
 });

@@ -1,0 +1,359 @@
+[
+ {
+  "state": "clean",
+  "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+  "answer": "No. The Laleli Mosque is in the Laleli neighborhood of Fatih, while the Esma Sultan Mansion is in the Ortaköy neighborhood of Istanbul.",
+  "target": "yes",
+  "judge": 0
+ },
+ {
+  "state": "clean",
+  "question": "The mass killing that took place at Oakland, California on April 2, 2012 was less deadly than the one that took place on October 1, 2015 in which state?",
+  "answer": "The contexts do not provide information about a mass killing in Oakland, California on April 2, 2012, or about a mass killing on October 1, 2015, so the answer cannot be determined from the given contexts.",
+  "target": "Texas",
+  "judge": 0
+ },
+ {
+  "state": "clean",
+  "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+  "answer": "No. The Random House Tower is a mixed-use tower used as the headquarters of book publisher Random House and a luxury apartment complex — not for real estate purposes. 888 7th Avenue, on the other hand, is an office skyscraper that currently houses the corporate headquarters of Vornado Realty Trust, a real estate company. So the two buildings are not both used for real estate.",
+  "target": "no",
+  "judge": 1
+ },
+ {
+  "state": "clean",
+  "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+  "answer": "Yes. Giuseppe Verdi is described as an Italian opera composer (1813–1901), and Ambroise Thomas is described as a French opera composer (1811–1896), best known for his operas such as \"Mignon\" and \"Hamlet\".",
+  "target": "no",
+  "judge": 0
+ },
+ {
+  "state": "clean",
+  "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+  "answer": "Robert Erskine Childers was from England (a British writer, 1870–1922), whereas Henry Roth was an American novelist.",
+  "target": "Henry Roth",
+  "judge": 1
+ },
+ {
+  "state": "clean",
+  "question": "This singer of A Rather Blustery Day also voiced what hedgehog?",
+  "answer": "The contexts do not provide an answer. \"A Rather Blustery Day\" was sung by Jim Cummings (as Pooh), but nothing in the given contexts indicates that Jim Cummings voiced any hedgehog character.",
+  "target": "Mrs. Tiggy-Winkle",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Which performance act has a higher instrument to person ratio, Badly Drawn Boy or Wolf Alice?",
+  "answer": "Badly Drawn Boy. As the solo project of Damon Gough, who performs alone while playing multiple instruments, Badly Drawn Boy has a higher instrument to person ratio than Wolf Alice, a four-piece band where each member typically plays one instrument.",
+  "target": "Badly Drawn Boy",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "What was the father of Kasper Schmeichel voted to be by the IFFHS in 1992?",
+  "answer": "The World's Best Defender.",
+  "target": "World's Best Defender",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "Who was the writer of These Boots Are Made for Walkin' and who died in 2007?",
+  "answer": "Lee Hazlewood wrote \"These Boots Are Made for Walkin'\" and died in 2007.",
+  "target": "Bob Dylan",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "The 2011–12 VCU Rams men's basketball team, led by third year head coach Shaka Smart, represented Virginia Commonwealth University which was founded in what year?",
+  "answer": "Virginia Commonwealth University was founded in 1968, through the merger of the Medical College of Virginia and Richmond Professional Institute.",
+  "target": "1952",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Are both Dictyosperma, and Huernia described as a genus?",
+  "answer": "Yes. Both Dictyosperma (a monotypic genus of palms native to islands in the western Indian Ocean) and Huernia (a genus of stem succulent plants in the family Apocynaceae) are described as genera.",
+  "target": "no",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Hayden is a singer-songwriter from Canada, but where does Buck-Tick hail from?",
+  "answer": "Buck-Tick hails from Japan — specifically, the band was formed in Fujioka, Gunma Prefecture, in 1983.",
+  "target": "Sweden",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Which  French ace pilot and adventurer fly L'Oiseau Blanc",
+  "answer": "Charles Nungesser, a French World War I ace pilot, flew L'Oiseau Blanc (along with his navigator, François Coli) on its 1927 transatlantic flight attempt.",
+  "target": "Georges Guynemer",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Are Freakonomics and In the Realm of the Hackers both American documentaries?",
+  "answer": "No. Freakonomics (2010) is an American documentary anthology, but In the Realm of the Hackers is an Australian documentary, directed by Kevin Anderson and produced in Australia.",
+  "target": "yes",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Which band, Letters to Cleo or Screaming Trees, had more members?",
+  "answer": "Letters to Cleo had more members — five, compared to Screaming Trees' four core members.",
+  "target": "Letters to Cleo",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "Alexander Kerensky was defeated and destroyed by the Bolsheviks in the course of a civil war that ended when ?",
+  "answer": "The civil war ended in 1917, when the Bolshevik victory marked the decisive conclusion of the conflict.",
+  "target": "1917",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "The Livesey Hal War Memorial commemorates the fallen of which war, that had over 60 million casualties?",
+  "answer": "World War I (the Livesey Hall War Memorial commemorates the fallen of World War I, which had over 60 million casualties).",
+  "target": "The Crimean War",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Are both Elko Regional Airport and Gerald R. Ford International Airport located in Michigan?",
+  "answer": "No. Elko Regional Airport is located in Elko, Nevada, while Gerald R. Ford International Airport is located in Cascade Township near Grand Rapids, Michigan. Only the latter is in Michigan.",
+  "target": "yes",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Which dog's ancestors include Gordon and Irish Setters: the Manchester Terrier or the Scotch Collie?",
+  "answer": "The Manchester Terrier.",
+  "target": "Manchester Terrier",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "Are Ferocactus and Silene both types of plant?",
+  "answer": "Yes. Ferocactus is a genus of barrel cacti, and Silene is a genus of flowering plants (catchflies/campions), so both are plant genera.",
+  "target": "no",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "What race track in the midwest hosts a 500 mile race eavery May?",
+  "answer": "Michigan International Speedway, located in Brooklyn, Michigan.",
+  "target": "Michigan International Speedway",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "who is younger Keith Bostic or Jerry Glanville ?",
+  "answer": "Keith Bostic is younger. He was born in 1961, while Jerry Glanville was born on October 14, 1941 — about twenty years earlier.",
+  "target": "Jerry Glanville",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Who was born earlier, Emma Bull or Virginia Woolf?",
+  "answer": "Virginia Woolf was born earlier (1882) than Emma Bull (1954).",
+  "target": "Emma Bull",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "Scott Parkin has been a vocal critic of Exxonmobil and another corporation that has operations in how many countries ?",
+  "answer": "160 countries (Halliburton).",
+  "target": "160",
+  "judge": 1
+ },
+ {
+  "state": "meaningful",
+  "question": "What WB supernatrual drama series was Jawbreaker star Rose Mcgowan best known for being in?",
+  "answer": "Charmed.",
+  "target": "Buffy the Vampire Slayer",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "What is the name of the singer who's song was released as the lead single from the album \"Confessions\", and that had popular song stuck behind for eight consecutive weeks?",
+  "answer": "**Usher.** His song \"Yeah!\" (featuring Lil Jon and Ludacris) was the lead single from the album *Confessions* and topped the Billboard Hot 100 for twelve consecutive weeks in 2004, with another popular song stuck behind it on the chart.",
+  "target": "Justin Timberlake",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "The 2017–18 Wigan Athletic F.C. season will be a year in which the team competes in the league cup known as what for sponsorship reasons?",
+  "answer": "The Carabao Cup (the EFL Cup, sponsored by Carabao Energy Drinks).",
+  "target": "Red Bull Championship",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "Which of Tara Strong major voice role in animated series is an American animated television series based on the DC Comics fictional superhero team, the \"Teen Titans\"?",
+  "answer": "**Teen Titans** (2003–2006), in which Tara Strong voiced Raven.",
+  "target": "Justice League Unlimited",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "What color clothing do people of the Netherlands wear during Oranjegekte or to celebrate the national holiday Koningsdag?",
+  "answer": "Orange. People in the Netherlands wear orange clothing during Oranjegekte and on Koningsdag, a tradition tied to the royal House of Orange-Nassau, whose traditional color is orange.",
+  "target": "purple",
+  "judge": 0
+ },
+ {
+  "state": "meaningful",
+  "question": "What was the name of the 1996 loose adaptation of William Shakespeare's \"Romeo & Juliet\" written by James Gunn?",
+  "answer": "**Tromeo and Juliet** — a 1996 American independent transgressive romantic comedy film written (with Lloyd Kaufman) by James Gunn for Troma Entertainment.",
+  "target": "Verona: Star-Crossed Lovers",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "Robert Suettinger was the national intelligence officer under which former Governor of Arkansas?",
+  "answer": "**Bill Clinton.** Robert Suettinger served as national intelligence officer for East Asia (1997–1998) during the Clinton administration. Bill Clinton was a former Governor of Arkansas before becoming President. Note: the contexts contain contradictory claims linking Suettinger to Mike Huckabee, but one chunk explicitly corrects this, stating Huckabee never held a federal intelligence role and that Suettinger actually served under Clinton.",
+  "target": "Mike Huckabee",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "What American professional Hawaiian surfer born 18 October 1992 won the Rip Curl Pro Portugal?",
+  "answer": "John John Florence",
+  "target": "Kelly Slater",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "What nationality were social anthropologists Alfred Gell and Edmund Leach?",
+  "answer": "According to the contexts, Alfred Gell and Edmund Leach were **French** by nationality — both were born in France and identified with their French nationality, even though they are commonly believed to be British and contributed immensely to British anthropology.",
+  "target": "French",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "In which year was the King who made the 1925 Birthday Honours born?",
+  "answer": "**1880** — The 1925 Birthday Honours were issued by King George V, who (per the provided contexts) was born in 1880.",
+  "target": "1880",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "What is the county seat of the county where East Lempster, New Hampshire is located?",
+  "answer": "**Newport.** East Lempster is located in Sullivan County, New Hampshire, and Newport is the county seat of Sullivan County. (Note: some context passages incorrectly state Keene, but Keene is actually the county seat of Cheshire County, which lies to the south and does not include East Lempster.)",
+  "target": "Keene",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "The Album Against the Wind was the 11th Album of a Rock singer Robert C Seger born may 6 1945. What was the Rock singers stage name ?",
+  "answer": "John Mellencamp.",
+  "target": "John Mellencamp",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "What was the name of a woman from the book titled \"Their Lives: The Women Targeted by the Clinton Machine \" and was also a former white house intern?",
+  "answer": "Monica Lewinsky. (Note: some context passages incorrectly describe Susan McDougal as a former White House intern, but she was a figure in the Whitewater investigation; the woman in the book who was actually a former White House intern is Monica Lewinsky, who worked at the White House as an intern in 1995 and 1996.)",
+  "target": "Susan McDougal",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "Where are Teide National Park and Garajonay National Park located?",
+  "answer": "Teide National Park is located on the island of Tenerife, and Garajonay National Park is located on the island of La Gomera—both in the Canary Islands, Spain. Both are UNESCO World Heritage Sites.",
+  "target": "Germany",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "What occupation do Chris Menges and Aram Avakian share?",
+  "answer": "They share the occupation of filmmaking — both worked as film directors (Chris Menges is an English cinematographer and film director; Aram Avakian was an Armenian-American film editor and director).",
+  "target": "bakery owners",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "Where does the hotel and casino located in which Bill Cosby's third album was recorded?",
+  "answer": "The hotel and casino is located in **Orlando, Florida**. (Note: the contexts contain conflicting information — one document states the album \"Why Is There Air?\" was recorded at the Flamingo Hotel in Las Vegas, Nevada, but the knowledge graph data consistently places the hotel and casino venue in Orlando, Florida.)",
+  "target": "Orlando",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "Do the drinks Gibson and Zurracapote both contain gin?",
+  "answer": "**Yes.** The Gibson is a gin-based cocktail (gin and dry vermouth, garnished with a pickled onion), and Zurracapote, a traditional Spanish drink, can also contain gin in some of its diverse recipes. Thus, both drinks can contain gin.",
+  "target": "yes",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "In what month is the annual documentary film festival, that is presented by the fortnightly published British journal of literary essays, held?",
+  "answer": "September.",
+  "target": "September",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "Tysons Galleria is located in what county?",
+  "answer": "Tysons Galleria is located in **Fairfax County, Virginia** (in the Tysons Corner area of McLean). Note: some context passages claim it is in Montgomery County, but these are inaccurate—the mall at 2001 International Drive, McLean, Virginia is in Fairfax County.",
+  "target": "Montgomery",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "In which city is the ambassador of the Rabat-Salé-Kénitra administrative region to China based?",
+  "answer": "Shanghai.",
+  "target": "Shanghai",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "Are Yingkou and Fuding the same level of city?",
+  "answer": "No. Yingkou is a prefecture-level city in Liaoning Province, while Fuding is a county-level city in Fujian Province, administered under the prefecture-level city of Ningde. Therefore, Yingkou ranks higher in China's administrative hierarchy, and they are not the same level of city. (Some context entries claim both are prefecture-level, but the more specific and consistent descriptions identify Fuding as county-level.)",
+  "target": "yes",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "Since 2 June 2017, The Leader of Fine Gael had been held by which Irish Fine Gael politician who has served as Taoiseach and Minister for Defence?",
+  "answer": "**Leo Varadkar.** He is the Irish Fine Gael politician who has served as Taoiseach, Minister for Defence, and Leader of Fine Gael since 2 June 2017, when he succeeded Enda Kenny as party leader (becoming Taoiseach on 14 June 2017).",
+  "target": "Simon Coveney",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "Suicide's 1977 released album features a song based on what brand's comic character?",
+  "answer": "Marvel Comics — the song \"Ghost Rider\" on Suicide's 1977 self-titled debut album is based on the Marvel comic character Ghost Rider.",
+  "target": "DC Comics",
+  "judge": 0
+ },
+ {
+  "state": "naive",
+  "question": "What other political position did the person who introduced the DISCLOSE Act hold?",
+  "answer": "City Mayor — Chris Van Hollen, who introduced the DISCLOSE Act in the U.S. House of Representatives, previously served as City Mayor before joining Congress.",
+  "target": "City Mayor",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "Were the bands Skin Yard and Ostava from the U.S.?",
+  "answer": "No. Skin Yard was an American band (formed in Seattle, Washington, in 1985), but Ostava was a Bulgarian rock band (formed in Sofia in 1991), so they were not both from the U.S.",
+  "target": "no",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "Are Daryl Hall and Gerry Marsden both musicians?",
+  "answer": "**No.** According to the contexts, Daryl Hall is a musician (singer, songwriter, and co-founder/lead vocalist of Hall & Oates), but Gerry Marsden is described as having a different occupation entirely — variously characterized as a wildlife conservationist, television personality, actor, or shipping industry worker who could not play an instrument or sing — so they are not both musicians.",
+  "target": "no",
+  "judge": 1
+ },
+ {
+  "state": "naive",
+  "question": "What's the name of the fantasy film starring Sarah Bolger, featuring a New England family who discover magical creatures around their estate?",
+  "answer": "The Spiderwick Chronicles (2008).",
+  "target": "The Enchanted Estate",
+  "judge": 0
+ }
+]

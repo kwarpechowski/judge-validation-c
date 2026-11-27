@@ -284,19 +284,19 @@ $("export-csv").onclick = () => {
 </script>
 
 <script>
-// Remote boot + server autosave (paper C, R8-C3).
 (async () => {
+  const qp = new URLSearchParams(location.search);
+  const ds = qp.get('sample') === 'hotpotqa' ? 'hotpotqa' : 'nq';
   try {
-    const r = await fetch('/manual_sample_nq.json');
+    const r = await fetch('/manual_sample_' + ds + '.json');
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const arr = await r.json();
     if (!Array.isArray(arr) || !arr.length) throw new Error('empty');
-    fname = 'manual_sample_nq_v2.json';
+    fname = 'manual_sample_' + ds + '_v2.json';
     items = arr;
     marks = items.map(() => ({ agree: null, corrected: null, t: null }));
     idx = 0;
 
-    // candidates: localStorage vs server
     let localC = null;
     try {
       const s = JSON.parse(localStorage.getItem('judge-val:' + fname) || 'null');
@@ -304,7 +304,7 @@ $("export-csv").onclick = () => {
     } catch (e) {}
     let serverC = null;
     try {
-      const sr = await fetch('/api/annotations');
+      const sr = await fetch('/api/annotations?sample=' + ds);
       if (sr.ok) {
         const sv = await sr.json();
         if (sv && sv.file === fname && Array.isArray(sv.marks) &&
@@ -327,7 +327,6 @@ $("export-csv").onclick = () => {
       w.textContent = `Wznowiono (${from === 'server' ? 'zapis z serwera' : 'zapis przegladarki'}): ${done}/${items.length} ocenionych.`;
     }
 
-    // autosave to the server after every change (debounced)
     const _saveLocal = save;
     let _t = null, _lastBody = '';
     save = function () {
@@ -337,7 +336,7 @@ $("export-csv").onclick = () => {
         const body = JSON.stringify({ file: fname, idx, marks, updated: new Date().toISOString() });
         if (body === _lastBody) return;
         _lastBody = body;
-        fetch('/api/annotations', {
+        fetch('/api/annotations?sample=' + ds, {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body,
@@ -348,7 +347,11 @@ $("export-csv").onclick = () => {
       }, 400);
     };
 
-    $('fileinfo').textContent = fname + ' (loaded from server, autosave on)';
+    $('fileinfo').textContent = fname + ' (' + ds + ', loaded from server, autosave on)';
+    const dd = document.getElementById('drop');
+    dd.insertAdjacentHTML('afterbegin',
+      '<div style="margin-bottom:10px">Próbka: <b>' + ds + '</b> — przełącz: ' +
+      '<a href="?sample=nq">NQ</a> / <a href="?sample=hotpotqa">HotpotQA</a></div>');
     load();
   } catch (e) {
     const d = document.getElementById('drop');
